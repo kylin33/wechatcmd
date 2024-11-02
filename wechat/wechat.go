@@ -137,6 +137,7 @@ func (w *Wechat) WaitForLogin() (err error) {
 	if err != nil {
 		err = fmt.Errorf("创建二维码失败:%s", err.Error())
 	}
+	fmt.Println("\n请使用微信扫描二维码登陆", w.QrImagePath)
 	defer os.Remove(w.QrImagePath)
 	w.Log.Println("扫描二维码登陆....")
 	code, tip := "", 1
@@ -280,6 +281,7 @@ func (w *Wechat) Login() (err error) {
 	if err != nil {
 		return
 	}
+	fmt.Println("step:1")
 	defer resp.Body.Close()
 	reader := resp.Body.(io.Reader)
 	if err = xml.NewDecoder(reader).Decode(w.Request); err != nil {
@@ -308,6 +310,8 @@ func (w *Wechat) Login() (err error) {
 	if err = w.Send(apiUri, bytes.NewReader(data), newResp); err != nil {
 		return
 	}
+	fmt.Println("step:4")
+
 	w.Log.Printf("the newResp:%#v", newResp)
 	for _, contact := range newResp.ContactList {
 		w.InitContactList = append(w.InitContactList, contact)
